@@ -2,7 +2,7 @@ fastapi
 uvicorn
 python-multipart
 whisper
-tempfile
+temp
 transformers
 torch
 nltk
