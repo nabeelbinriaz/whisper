@@ -31,7 +31,7 @@ async def transcribe_audio_file(file: UploadFile = File(...)):
     except Exception as e:
         return JSONResponse(status_code=500, content={"message": str(e)})
 
-@app.post("/transcribe/")
+@app.post("/summarize/")
 async def summarzie_audio_file(text: str = Form(...)):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     m_name = "marefa-nlp/summarization-arabic-english-news"
