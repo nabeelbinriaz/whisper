@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile,Form
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 import whisper
 import tempfile
 from transformers import AutoTokenizer, AutoModelWithLMHead
@@ -9,7 +10,13 @@ nltk.download('punkt')
 from nltk.tokenize import sent_tokenize
 
 app = FastAPI()
-
+app.add_middleware(
+    CORSMiddleware, 
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 # Function to transcribe audio using Whisper
 async def transcribe_audio(audio_path):
     model = whisper.load_model("large")  # Adjust model size as needed
