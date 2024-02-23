@@ -1,7 +1,7 @@
 from fastapi import FastAPI, File, UploadFile,Form
 from fastapi.responses import JSONResponse
-from fastapi.middleware.cors import CORSMiddleware
 import whisper
+from fastapi.middleware.cors import CORSMiddleware
 import tempfile
 from transformers import AutoTokenizer, AutoModelWithLMHead
 import torch
@@ -46,7 +46,7 @@ async def summarzie_audio_file(text: str = Form(...)):
     tokenizer = AutoTokenizer.from_pretrained(m_name)
     model = AutoModelWithLMHead.from_pretrained(m_name).to(device)
 
-    def get_summary(text, tokenizer, model, device="cpu", num_beams=8, max_length=2048, length_penalty=5.0):
+    def get_summary(text, tokenizer, model, device, num_beams=8, max_length=2048, length_penalty=5.0):
         if len(text.strip()) < 50:
             return ["Please provide a longer text."]
 
@@ -67,7 +67,5 @@ async def summarzie_audio_file(text: str = Form(...)):
         output = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
         return [s.strip() for s in output.split("<hl>") if s.strip() != ""]
     hls = get_summary(text, tokenizer, model, device)
-    a=""
-    for hl in hls:
-        summary=" "+a+hl+" "
-    return JSONResponse(status_code=200, content={"summary": summary})
+    summary_text = " ".join(hls)
+    return JSONResponse(status_code=200, content={"summary": summary_text})
